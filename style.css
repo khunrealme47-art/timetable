@@ -1,0 +1,45 @@
+
+body {
+  font-family: Arial, sans-serif;
+  background: url('background.jpg') no-repeat center center fixed;
+  background-size: cover;
+  color: #fff;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  width: 95%;
+  margin: auto;
+  margin-top: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(0,0,0,0.5);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+th {
+  background: rgba(0,0,0,0.7);
+  padding: 12px;
+  text-align: center;
+  font-size: 18px;
+}
+
+td {
+  padding: 14px;
+  border-bottom: 1px solid #333;
+  text-align: center;
+}
+
+tr:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+h1 {
+  text-align: center;
+  margin-top: 20px;
+}
