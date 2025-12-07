@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ตารางเรียน MR.2/1</title>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#ff0033">
+
+<style>
+body{
+margin:0;
+padding:20px;
+font-family:sans-serif;
+background:linear-gradient(180deg,#000,#111);
+color:#fff;
+}
+h2{
+text-align:center;
+color:#ff0033;
+margin-bottom:10px;
+}
+#time{
+text-align:center;
+font-size:14px;
+margin-bottom:18px;
+color:#ccc;
+}
+button{
+width:100%;
+padding:14px;
+margin:6px 0;
+font-size:16px;
+border:none;
+border-radius:12px;
+background:#ff0033;
+color:#fff;
+font-weight:bold;
+}
+button:active{opacity:.7}
+#result{
+margin-top:16px;
+padding:16px;
+border-radius:14px;
+background:#0b0b0b;
+border:1px solid #333;
+white-space:pre-line;
+font-size:15px;
+}
+</style>
+</head>
+
+<body>
+
+<h2>ตารางเรียน ปวช.2/1</h2>
+<div id="time"></div>
+
+<button onclick="currentClass()">📌 คาบนี้</button>
+<button onclick="nextClass()">➡️ คาบต่อไป</button>
+<button onclick="breakTime()">☕ เวลาพัก</button>
+<button onclick="showSchedule()">📋 ตารางวันนี้</button>
+
+<div id="result">กดปุ่มเพื่อดูข้อมูล</div>
+
+<script>
+/* ===== เวลาไทย ===== */
+function thaiTime(){
+const d = new Date();
+const days = ["อาทิตย์","จันทร์","อังคาร","พุธ","พฤหัส","ศุกร์","เสาร์"];
+const dd = String(d.getDate()).padStart(2,"0");
+const mm = String(d.getMonth()+1).padStart(2,"0");
+const yy = d.getFullYear()+543;
+const hh = String(d.getHours()).padStart(2,"0");
+const mi = String(d.getMinutes()).padStart(2,"0");
+const ss = String(d.getSeconds()).padStart(2,"0");
+return `${days[d.getDay()]} - ${dd}/${mm}/${yy} - ${hh}.${mi}.${ss}`;
+}
+setInterval(()=>time.innerText = thaiTime(),1000);
+time.innerText = thaiTime();
+
+/* ===== ตารางเรียน ===== */
+const schedule = {
+2:[ 
+{start:"08:40",end:"11:10",name:"ภาษาอังกฤษเพื่ออาชีพอุตสาหกรรม (EDL)",room:"1051"},
+{start:"12:50",end:"14:30",name:"ภาษาอังกฤษเพื่ออาชีพอุตสาหกรรม (EDL)",room:"1053"},
+{start:"14:30",end:"16:10",name:"สุขภาพ ความปลอดภัยและสิ่งแวดล้อม",room:"1221"}
+],
+3:[ 
+{start:"08:40",end:"11:10",name:"การติดตั้งและควบคุมมอเตอร์ไฟฟ้า",room:"642"},
+{start:"12:00",end:"13:40",name:"กิจกรรมองค์การวิชาชีพ 1",room:"432"},
+{start:"14:30",end:"16:10",name:"ภาษาอังกฤษเพื่ออาชีพอุตสาหกรรม (EDL)",room:"1051"}
+],
+4:[ 
+{start:"08:40",end:"10:20",name:"ประวัติศาสตร์ชาติไทย",room:"1221"},
+{start:"12:50",end:"16:10",name:"การควบคุมหุ่นยนต์อุตสาหกรรมเบื้องต้น",room:"424"}
+],
+5:[
+{start:"08:40",end:"11:10",name:"ชิ้นส่วนเครื่องกลในงานเมคคาทรอนิกส์",room:"544"},
+{start:"14:30",end:"16:10",name:"ภาษาอังกฤษเพื่ออาชีพอุตสาหกรรม (EDL)",room:"1051"}
+],
+6:[
+{start:"08:40",end:"10:20",name:"การพัฒนาอย่างยั่งยืน",room:"223"},
+{start:"12:50",end:"16:10",name:"ระบบเครื่องจักรอัตโนมัติเบื้องต้น (IOT-AL Net)",room:"1323"}
+]
+};
+
+function toMin(t){let [h,m]=t.split(":");return +h*60+ +m;}
+function nowMin(){let d=new Date();return d.getHours()*60+d.getMinutes();}
+function noClass(){result("❌ วันนี้ไม่มีเรียน");}
+
+function currentClass(){
+const d=new Date().getDay();
+if(d===0||d===1){noClass();return;}
+const day=schedule[d],n=nowMin();
+for(const c of day){
+if(n>=toMin(c.start)&&n<toMin(c.end)){
+result(`📌 กำลังเรียนอยู่\n\n${c.name}\nห้อง ${c.room}\nเวลา ${c.start} - ${c.end}`);
+return;
+}
+}
+result("⏳ ตอนนี้เป็นคาบว่าง");
+}
+
+function nextClass(){
+const d=new Date().getDay();
+if(d===0||d===1){noClass();return;}
+const day=schedule[d],n=nowMin();
+for(const c of day){
+if(toMin(c.start)>n){
+result(`➡️ คาบต่อไป\n\n${c.name}\nห้อง ${c.room}\nเวลา ${c.start} - ${c.end}`);
+return;
+}
+}
+result("✅ วันนี้เรียนครบแล้ว");
+}
+
+function breakTime(){
+const d=new Date().getDay();
+if(d===0||d===1){noClass();return;}
+result("☕ เวลาพักกลางวัน\n11:10 - 12:50");
+}
+
+function showSchedule(){
+const d=new Date().getDay();
+if(d===0||d===1){noClass();return;}
+let out="📋 ตารางเรียนวันนี้\n";
+schedule[d].forEach(c=>{
+out+=`\n\n⏰ ${c.start} - ${c.end}\n📘 ${c.name}\n🏫 ห้อง ${c.room}`;
+});
+result(out);
+}
+
+function result(t){document.getElementById("result").innerText=t;}
+
+/* ===== Register Service Worker ===== */
+if("serviceWorker" in navigator){
+navigator.serviceWorker.register("service-worker.js");
+}
+</script>
+
+</body>
+</html>
