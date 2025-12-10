@@ -3,80 +3,286 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ตารางเรียน MR.2/1</title>
+<title>ตารางเรียน MR.2/1 (Final Verified)</title>
 
 <style>
-body{
-    margin:0;
-    padding:20px;
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-    transition:background .25s,color .25s;
-}
-:root{
-    --bg:#fff;--text:#000;--sub:#555;--card:#f4f4f4;--btn:#ff3b30;--border:#ddd;
-}
-.dark{
-    --bg:#000;--text:#fff;--sub:#aaa;--card:#111;--btn:#ff453a;--border:#333;
-}
-body{background:var(--bg);color:var(--text);}h2{text-align:center;margin:10px 0 5px;color:var(--btn);font-weight:700;}
-#time{text-align:center;color:var(--sub);font-size:14px;margin-bottom:15px;}
-#modeToggle{position:absolute;top:12px;right:12px;padding:8px 13px;font-size:13px;background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:10px;}
-button.main-btn{width:100%;padding:15px;margin:8px 0;font-size:16px;font-weight:600;border:none;border-radius:14px;background:var(--btn);color:#fff;transition:.2s;}button.main-btn:active{transform:scale(.97);opacity:.85;}
-#resultBox{margin-top:18px;padding:18px;border-radius:16px;background:var(--card);border:1px solid var(--border);white-space:pre-line;font-size:15px;line-height:1.55;}
+/* ===== ฟอนต์ & ดีไซน์ (iOS Style) ===== */
+body{ margin:0; padding:20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; transition: background .25s, color .25s; }
+:root{ --bg:#ffffff; --text:#000; --sub:#555; --card:#f4f4f4; --btn:#ff3b30; --btn-hover:#d63229; --border:#ddd; --warn:#ffcc00; --warn-active:#ff9500; }
+.dark{ --bg:#000; --text:#fff; --sub:#aaa; --card:#1c1c1e; --btn:#ff453a; --btn-hover:#ff6961; --border:#333; --warn:#ffd60a; --warn-active:#ff9f0a; }
+body{ background:var(--bg); color:var(--text); }
 
-/* หัวใจพลุ */
-.heart{position:fixed;bottom:0;font-size:20px;animation:fly 2s linear forwards;}@keyframes fly{0%{transform:translateY(0) scale(1);opacity:1;}100%{transform:translateY(-600px) scale(2);opacity:0;}}
+h2{ text-align:center; margin:10px 0 5px; color:var(--btn); font-weight:700; }
+#time{ text-align:center; color:var(--sub); font-size:14px; margin-bottom:15px; }
+#modeToggle{ position:absolute; top:12px; right:12px; padding:8px; font-size:18px; background:transparent; color:var(--text); border:none; cursor: pointer; }
+
+/* ปุ่มต่างๆ */
+button.main-btn{ width:100%; padding:15px; margin:8px 0; font-size:16px; font-weight:600; border:none; border-radius:12px; background:var(--btn); color:#fff; transition:.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.15); }
+button.main-btn:active{ transform:scale(0.98); opacity:.9; }
+
+/* ปุ่มลดเวลา (Updated Style) */
+button.reduce-btn{ background: var(--card); color: var(--text); border: 2px solid var(--border); }
+button.reduce-btn.active{ background: var(--warn-active); color: #000; border-color: var(--warn-active); animation: pulse 2s infinite; font-weight: bold;}
+
+@keyframes pulse { 
+    0% { box-shadow: 0 0 0 0 rgba(255, 149, 0, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(255, 149, 0, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 149, 0, 0); }
+}
+
+/* กล่องแสดงผล */
+#resultBox{ margin-top:20px; padding:20px; border-radius:16px; background:var(--card); border:1px solid var(--border); font-size:16px; line-height:1.6; min-height: 100px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+
+/* Layout ตารางเรียน */
+.schedule-container { width: 100%; text-align: left; }
+.schedule-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding: 12px 0; }
+.schedule-row:last-child { border-bottom: none; }
+.time-col { width: 35%; font-weight: bold; color: var(--btn); font-size: 15px; display: flex; flex-direction: column; }
+.time-col span { font-size: 12px; color: var(--sub); font-weight: normal; }
+.info-col { width: 65%; padding-left: 10px; }
+.subject-name { font-weight: 600; display: block; line-height: 1.3; }
+.room-name { font-size: 13px; color: var(--sub); margin-top: 4px; display: inline-block; background: var(--bg); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border); }
 </style>
 </head>
-<body>
-<button id="modeToggle" onclick="toggleMode()">🌗</button>
-<h2>ตารางเรียน ปวช.2/1</h2>
-<div id="time"></div>
 
-<button class="main-btn" onclick="currentClass()">📌 คาบนี้</button>
+<body>
+
+<button id="modeToggle" onclick="toggleMode()">🌗</button>
+
+<h2>ตารางเรียน MR.2/1</h2>
+<div id="time">Loading...</div>
+
+<button id="btnReduce" class="main-btn reduce-btn" onclick="toggleReduce()">⚠️ ลดเวลาเรียน (ปิด)</button>
+
+<button class="main-btn" onclick="currentClass()">📌 คาบนี้เรียนอะไร</button>
 <button class="main-btn" onclick="nextClass()">➡️ คาบต่อไป</button>
-<button class="main-btn" onclick="breakTime()">☕ เวลาพัก</button>
-<button class="main-btn" onclick="loveMeena()">❤️ อย่ากด</button>
+<button class="main-btn" onclick="breakTime()">⏳ อีกกี่นาทีเลิก/พัก</button>
+<button class="main-btn" onclick="showSchedule()">📋 ดูตารางวันนี้</button>
 
 <div id="resultBox">กดปุ่มเพื่อดูข้อมูล</div>
 
 <script>
-function toggleMode(){document.body.classList.toggle("dark");localStorage.setItem("theme",document.body.classList.contains("dark")?"dark":"light");}
-if(localStorage.getItem("theme")==="dark")document.body.classList.add("dark");
+/* ===== โหมดสว่าง/มืด ===== */
+function toggleMode(){
+    document.body.classList.toggle("dark");
+    localStorage.setItem("theme",document.body.classList.contains("dark")?"dark":"light");
+}
+if(localStorage.getItem("theme")==="dark"){ document.body.classList.add("dark"); }
 
-function thaiTime(){const d=new Date();const days=["อาทิตย์","จันทร์","อังคาร","พุธ","พฤหัส","ศุกร์","เสาร์"];return `${days[d.getDay()]} - ${d.toLocaleDateString("th-TH")} - ${d.toLocaleTimeString("th-TH")}`;}
-setInterval(()=>time.innerText=thaiTime(),1000);
+/* ===== เวลาไทย ===== */
+function thaiTime(){
+    const d=new Date();
+    const days=["อาทิตย์","จันทร์","อังคาร","พุธ","พฤหัส","ศุกร์","เสาร์"];
+    return `${days[d.getDay()]} ${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()+543} - ${d.toLocaleTimeString("th-TH")}`;
+}
+setInterval(()=>document.getElementById("time").innerText = thaiTime(),1000);
 
-const schedule={
-2:[{start:"08:40",end:"11:10",name:"อังกฤษอาชีพ (EDL)",room:"1051"},{start:"12:50",end:"14:30",name:"อังกฤษอาชีพ (EDL)",room:"1053"},{start:"14:30",end:"16:10",name:"สุขภาพและสิ่งแวดล้อม",room:"1221"}],
-3:[{start:"08:40",end:"11:10",name:"ควบคุมมอเตอร์ไฟฟ้า",room:"642"},{start:"12:00",end:"13:40",name:"กิจกรรมองค์การวิชาชีพ 1",room:"432"},{start:"14:30",end:"16:10",name:"อังกฤษอาชีพ (EDL)",room:"1051"}],
-4:[{start:"08:40",end:"10:20",name:"ประวัติศาสตร์ชาติไทย",room:"1221"},{start:"12:50",end:"16:10",name:"หุ่นยนต์อุตสาหกรรมเบื้องต้น",room:"424"}],
-5:[{start:"08:40",end:"11:10",name:"ชิ้นส่วนเครื่องกล",room:"544"},{start:"14:30",end:"16:10",name:"อังกฤษอาชีพ (EDL)",room:"1051"}],
-6:[{start:"08:40",end:"10:20",name:"การพัฒนาอย่างยั่งยืน",room:"223"},{start:"12:50",end:"16:10",name:"ระบบ IOT-AL Net",room:"1323"}]
+/* ===== ข้อมูลตารางเรียน (อัปเดตรายละเอียดห้องเรียนตามภาพจริง) ===== */
+const scheduleData={
+    // วันอังคาร
+    2: [
+        {start:"08:40", end:"10:20", name:"ภาษาอังกฤษเพื่องานช่างอุตสาหกรรม (EDL)", room:"1051 (EDL) - อ.REYNALYN"},
+        {start:"12:50", end:"13:40", name:"ภาษาอังกฤษเพื่องานช่างอุตสาหกรรม (EDL)", room:"1053 (EDL) - อ.SOPHIE"},
+        {start:"14:30", end:"15:20", name:"สุขภาพ ความปลอดภัยและสิ่งแวดล้อม", room:"1221 - อ.นพรัตน์"}
+    ],
+    // วันพุธ
+    3: [
+        {start:"08:40", end:"12:00", name:"การติดตั้งและควบคุมมอเตอร์ไฟฟ้า", room:"642 - อ.สุรเดช/อ.ปิยะ"},
+        {start:"12:50", end:"13:40", name:"กิจกรรมองค์การวิชาชีพ 1", room:"432 - อ.ภาณุวัฒน์"},
+        {start:"14:30", end:"15:20", name:"ภาษาอังกฤษเพื่องานช่างอุตสาหกรรม (EDL)", room:"1051 (EDL) - อ.REYNALYN"}
+    ],
+    // วันพฤหัสบดี
+    4: [
+        {start:"08:40", end:"09:30", name:"ประวัติศาสตร์ชาติไทย", room:"1221 - อ.ปณณรักษ์"},
+        {start:"12:50", end:"16:10", name:"การควบคุมหุ่นยนต์อุตสาหกรรมเบื้องต้น", room:"424 - TA.อัมรินทร์/อ.ประกิต"}
+    ],
+    // วันศุกร์
+    5: [
+        {start:"08:40", end:"12:00", name:"ชิ้นส่วนเครื่องกลในงานเมคคาทรอนิกส์", room:"544 - TA.จิรนันท์/อ.รัตนศิริ"},
+        {start:"13:40", end:"16:10", name:"ภาษาอังกฤษเพื่องานช่างอุตสาหกรรม (EDL)", room:"1051 (EDL) - อ.SOPHIE"}
+    ],
+    // วันเสาร์
+    6: [
+        {start:"08:40", end:"09:30", name:"การพัฒนาอย่างยั่งยืน", room:"223 - อ.ศิริวรรณ"},
+        {start:"12:50", end:"16:10", name:"ระบบเครื่องจักรกลอัตโนมัติเบื้องต้น", room:"1323 (ปฏิบัติ IOT) - TA.ศุภสิน"}
+    ]
 };
 
-function toMin(t){let[h,m]=t.split(":" );return +h*60+ +m;}function nowMin(){let d=new Date();return d.getHours()*60+d.getMinutes();}
+/* ===== ตารางเทียบเวลา (Mapper: อ้างอิงภาพ Reduced Table เป๊ะๆ) ===== */
+const timeMap = {
+    // ช่วงเช้า
+    "08:40": "08:40", 
+    "09:30": "09:20",
+    "10:20": "10:00",
+    "11:10": "10:40",
+    "12:00": "11:20", // จบคาบเช้า (ลดเวลา)
+    
+    // ช่วงบ่าย (ในภาพลดเวลา คาบ 6 เริ่ม 12:00)
+    "12:50": "12:00", // เริ่มคาบบ่าย (ปกติ 12:50 -> ลด 12:00)
+    "13:40": "12:40",
+    "14:30": "13:20",
+    "15:20": "14:00",
+    "16:10": "14:40"  // เลิกเรียน (ลดเวลา)
+};
+
+/* ===== ตัวแปรควบคุมโหมดลดเวลา ===== */
+let isReducedMode = false;
+
+function toggleReduce() {
+    isReducedMode = !isReducedMode;
+    const btn = document.getElementById("btnReduce");
+    if(isReducedMode) {
+        btn.innerHTML = "⚡ ลดเวลาเรียน (ทำงานอยู่)";
+        btn.classList.add("active");
+        show("เปิดโหมดลดเวลา 40 นาที/คาบ \nเวลาเรียนทั้งหมดถูกปรับอัตโนมัติ!");
+    } else {
+        btn.innerHTML = "⚠️ ลดเวลาเรียน (ปิด)";
+        btn.classList.remove("active");
+        show("กลับสู่โหมดเวลาเรียนปกติ (50 นาที)");
+    }
+}
+
+/* ===== ฟังก์ชันดึงตาราง (Mapping Logic) ===== */
+function getSchedule(dayIdx) {
+    if (!scheduleData[dayIdx]) return null;
+    if (!isReducedMode) return scheduleData[dayIdx]; // ถ้าปิดโหมด ให้คืนค่าปกติ
+
+    // ถ้าเปิดโหมด ให้แปลงเวลา start/end ผ่าน timeMap
+    return scheduleData[dayIdx].map(item => {
+        return {
+            ...item,
+            start: timeMap[item.start] || item.start,
+            end: timeMap[item.end] || item.end
+        };
+    });
+}
+
+/* ===== Utilities ===== */
+function toMin(t){let[h,m]=t.split(":");return +h*60+ +m;}
+function nowMin(){let d=new Date();return d.getHours()*60+d.getMinutes();}
+
 let timer=null;
-function countdown(targetMin,text){clearInterval(timer);timer=setInterval(()=>{let now=nowMin();let diff=targetMin-now;if(diff<=0){clearInterval(timer);return;}let h=Math.floor(diff/60),m=diff%60;resultBox.innerHTML=text+`\n\n⏳ เหลืออีก ${h} ชม. ${m} นาที`;},1000);}
+function countdown(targetMin,text){
+    clearInterval(timer);
+    const update = () => {
+        let now=nowMin();
+        let diff=targetMin-now;
+        if(diff<=0){
+            clearInterval(timer);
+            document.getElementById("resultBox").innerText = "หมดเวลา / เปลี่ยนคาบแล้ว";
+            return;
+        }
+        let h=Math.floor(diff/60), m=diff%60;
+        document.getElementById("resultBox").innerHTML = 
+            `<strong>${text}</strong><br><br><span style="color:var(--btn); font-size:1.2em; font-weight:bold;">⏳ เหลือ ${h > 0 ? h + ' ชม. ' : ''}${m} นาที</span>`;
+    };
+    update();
+    timer=setInterval(update,1000);
+}
 
-function findNextDay(d){for(let i=1;i<=7;i++){let nd=(d+i)%7;if(schedule[nd])return nd;}}
-function show(t){clearInterval(timer);resultBox.innerText=t;}
+function findNextDay(d){
+    for(let i=1;i<=7;i++){
+        let nd=(d+i)%7;
+        if(scheduleData[nd]) return nd;
+    }
+}
 
-function currentClass(){const d=new Date().getDay(),n=nowMin();if(!schedule[d])return nextAvailableDay("วันนี้ไม่มีเรียน");for(const c of schedule[d]){if(n>=toMin(c.start)&&n<toMin(c.end)){countdown(toMin(c.end),`📌 คาบนี้\nวิชา: ${c.name}\nห้อง: ${c.room}\nเวลา ${c.start} - ${c.end}`);return;}}show("⏳ ตอนนี้เป็นคาบว่าง");}
+/* ===== ปุ่มฟังก์ชันหลัก ===== */
+function currentClass(){
+    const d=new Date().getDay(), n=nowMin();
+    const sch = getSchedule(d);
+    if(!sch) return nextAvailableDay("วันนี้ไม่มีเรียน");
 
-function nextClass(){const d=new Date().getDay(),n=nowMin();if(!schedule[d])return nextAvailableDay("วันนี้ไม่มีเรียน");for(const c of schedule[d]){if(toMin(c.start)>n){countdown(toMin(c.start),`➡️ คาบต่อไป\nวิชา: ${c.name}\nห้อง: ${c.room}\nเวลา ${c.start} - ${c.end}`);return;}}nextAvailableDay("วันนี้เรียนครบแล้ว");}
+    for(const c of sch){
+        if(n>=toMin(c.start) && n<toMin(c.end)){
+            countdown(toMin(c.end),
+            `📌 กำลังเรียน (${isReducedMode?'ลดเวลา':'ปกติ'}):<br>${c.name}<br>${c.room}`);
+            return;
+        }
+    }
+    show("⏳ ตอนนี้เป็นคาบว่าง / พัก");
+}
 
-function breakTime(){const d=new Date().getDay(),n=nowMin();if(!schedule[d])return nextAvailableDay("วันนี้ไม่มีเรียน");let day=schedule[d];
-let freeSlots=[];
-let schoolStart=toMin("08:40"),schoolEnd=toMin("16:10");
-let last=schoolStart;
-day.forEach(c=>{let s=toMin(c.start);if(s>last)freeSlots.push([last,s]);last=toMin(c.end);});if(last<schoolEnd)freeSlots.push([last,schoolEnd]);
-for(let slot of freeSlots){if(n>=slot[0]&&n<slot[1]){let mins=(slot[1]-slot[0]);let freeCount=freeSlots.length;countdown(slot[1],`☕ ตอนนี้เป็นเวลาพัก\nพัก ${Math.floor(mins/60)} ชม. ${mins%60} นาที\n\n📌 วันนี้มีคาบว่างทั้งหมด ${freeCount} ช่วง`);return;}}
-show("❌ ตอนนี้ไม่ใช่เวลาพัก");}
+function nextClass(){
+    const d=new Date().getDay(), n=nowMin();
+    const sch = getSchedule(d);
+    if(!sch) return nextAvailableDay("วันนี้ไม่มีเรียน");
 
-function nextAvailableDay(msg){let d=new Date().getDay();let next=findNextDay(d);let first=schedule[next][0];let target=toMin(first.start)+(next-d)*1440;countdown(target,`${msg}\n\n➡️ วันถัดไป: เรียนวิชา ${first.name}\nห้อง ${first.room}\nเริ่ม ${first.start}`);}
+    for(const c of sch){
+        if(toMin(c.start)>n){
+            countdown(toMin(c.start),
+            `➡️ คาบต่อไป (${isReducedMode?'ลดเวลา':'ปกติ'}):<br>${c.name}<br>${c.room}`);
+            return;
+        }
+    }
+    nextAvailableDay("วันนี้เรียนครบทุกวิชาแล้ว");
+}
 
-function loveMeena(){resultBox.innerHTML="";for(let i=0;i<50;i++)resultBox.innerHTML+=`รักมีนามากๆ ❤️ (${i+1})\n`;
-for(let i=0;i<20;i++){let h=document.createElement("div");h.className="heart";h.innerText="💖";h.style.left=Math.random()*100+"vw";document.body.appendChild(h);setTimeout(()=>h.remove(),2000);} }
+function breakTime(){
+    const d=new Date().getDay(), n=nowMin();
+    const sch = getSchedule(d);
+    if(!sch) return nextAvailableDay("วันนี้ไม่มีเรียน");
+    
+    for(const c of sch){
+        if(n>=toMin(c.start) && n<toMin(c.end)){
+            countdown(toMin(c.end), `📚 เลิกคาบนี้ (${c.name})`);
+            return;
+        }
+    }
+    for(const c of sch){
+        if(toMin(c.start)>n){
+            countdown(toMin(c.start), `☕ หมดเวลาพัก (เริ่มเรียน)`);
+            return;
+        }
+    }
+    show("เลิกเรียนแล้ว กลับบ้านได้! 🏠");
+}
+
+function showSchedule(){
+    clearInterval(timer);
+    const d=new Date().getDay();
+    const sch = getSchedule(d);
+    if(!sch) return nextAvailableDay("วันนี้ไม่มีเรียน");
+    
+    let html = `<div style="width:100%;">`;
+    html += `<h3 style="margin:0 0 15px; color:var(--text);">📅 ตารางเรียนวันนี้ ${isReducedMode?'(ลดเวลา) ⚡':''}</h3>`;
+    html += `<div class="schedule-container">`;
+
+    sch.forEach(c=>{
+        html += `
+        <div class="schedule-row">
+            <div class="time-col">
+                ${c.start}
+                <span>ถึง ${c.end}</span>
+            </div>
+            <div class="info-col">
+                <span class="subject-name">${c.name}</span>
+                <span class="room-name">${c.room}</span>
+            </div>
+        </div>`;
+    });
+
+    html += `</div></div>`;
+    document.getElementById("resultBox").innerHTML = html;
+}
+
+function nextAvailableDay(msg){
+    let d=new Date().getDay();
+    let next=findNextDay(d);
+    let schNext = getSchedule(next); 
+    if (!schNext) { show(msg); return; } // ป้องกัน error ถ้าวันถัดไปไม่มีตาราง
+
+    let first=schNext[0];
+    const daysTh = ["อาทิตย์","จันทร์","อังคาร","พุธ","พฤหัส","ศุกร์","เสาร์"];
+    
+    show(`${msg}\n\n➡️ เจออีกทีวัน${daysTh[next]}\nวิชา ${first.name}\nเริ่ม ${first.start}`);
+}
+
+function show(t){
+    clearInterval(timer);
+    document.getElementById("resultBox").innerText = t;
+}
 </script>
-</body></html>
+
+</body>
+</html>
