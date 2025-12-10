@@ -3,37 +3,140 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ตารางเรียน MR.2/1 (Final Verified)</title>
+<title>ตารางเรียน MR.2/1</title>
 
 <style>
-/* ===== ฟอนต์ & ดีไซน์ (iOS Style) ===== */
-body{ margin:0; padding:20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; transition: background .25s, color .25s; }
-:root{ --bg:#ffffff; --text:#000; --sub:#555; --card:#f4f4f4; --btn:#ff3b30; --btn-hover:#d63229; --border:#ddd; --warn:#ffcc00; --warn-active:#ff9500; }
-.dark{ --bg:#000; --text:#fff; --sub:#aaa; --card:#1c1c1e; --btn:#ff453a; --btn-hover:#ff6961; --border:#333; --warn:#ffd60a; --warn-active:#ff9f0a; }
+/* ===== 1. ORIGINAL RED THEME (Clean & Comfortable) ===== */
+body{
+    margin:0;
+    padding:20px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    transition: background .25s, color .25s;
+    padding-bottom: 80px; /* เว้นที่ให้ AI ด้านล่าง */
+}
+
+:root{
+    --bg:#ffffff;
+    --text:#000;
+    --sub:#555;
+    --card:#f4f4f4;
+    --btn:#ff3b30; /* สีแดงเดิม */
+    --btn-hover:#d63229;
+    --border:#ddd;
+    --warn:#ffcc00;
+    --warn-active:#ff9500;
+    --ai-bg:#e8f0fe; /* พื้นหลัง AI สีฟ้าอ่อนสบายตา */
+    --ai-text:#1a73e8;
+}
+
+.dark{
+    --bg:#000;
+    --text:#fff;
+    --sub:#aaa;
+    --card:#1c1c1e;
+    --btn:#ff453a;
+    --btn-hover:#ff6961;
+    --border:#333;
+    --warn:#ffd60a;
+    --warn-active:#ff9f0a;
+    --ai-bg:#1c1c1e;
+    --ai-text:#64d2ff;
+}
+
 body{ background:var(--bg); color:var(--text); }
 
-h2{ text-align:center; margin:10px 0 5px; color:var(--btn); font-weight:700; }
-#time{ text-align:center; color:var(--sub); font-size:14px; margin-bottom:15px; }
-#modeToggle{ position:absolute; top:12px; right:12px; padding:8px; font-size:18px; background:transparent; color:var(--text); border:none; cursor: pointer; }
+/* ===== TYPOGRAPHY ===== */
+h2{
+    text-align:center;
+    margin:10px 0 5px;
+    color:var(--btn);
+    font-weight:700;
+}
 
-/* ปุ่มต่างๆ */
-button.main-btn{ width:100%; padding:15px; margin:8px 0; font-size:16px; font-weight:600; border:none; border-radius:12px; background:var(--btn); color:#fff; transition:.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.15); }
+#time{
+    text-align:center;
+    color:var(--sub);
+    font-size:14px;
+    margin-bottom:15px;
+}
+
+#modeToggle{
+    position:absolute;
+    top:12px;
+    right:12px;
+    padding:8px 12px;
+    font-size:18px;
+    background:transparent;
+    color:var(--text);
+    border:none;
+    cursor: pointer;
+}
+
+/* ===== BUTTONS (Original Style) ===== */
+button.main-btn{
+    width:100%;
+    padding:15px;
+    margin:8px 0;
+    font-size:16px;
+    font-weight:600;
+    border:none;
+    border-radius:12px;
+    background:var(--btn);
+    color:#fff;
+    transition:.2s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    cursor: pointer;
+}
 button.main-btn:active{ transform:scale(0.98); opacity:.9; }
 
-/* ปุ่มลดเวลา (Updated Style) */
-button.reduce-btn{ background: var(--card); color: var(--text); border: 2px solid var(--border); }
-button.reduce-btn.active{ background: var(--warn-active); color: #000; border-color: var(--warn-active); animation: pulse 2s infinite; font-weight: bold;}
-
+/* ปุ่มลดเวลา (Style เดิม) */
+button.reduce-btn{
+    background: var(--card);
+    color: var(--text);
+    border: 2px solid var(--border);
+    box-shadow: none;
+}
+button.reduce-btn.active{
+    background: var(--warn-active);
+    color: #000;
+    border-color: var(--warn-active);
+    animation: pulse 2s infinite;
+    font-weight: bold;
+}
 @keyframes pulse { 
     0% { box-shadow: 0 0 0 0 rgba(255, 149, 0, 0.4); }
     70% { box-shadow: 0 0 0 10px rgba(255, 149, 0, 0); }
     100% { box-shadow: 0 0 0 0 rgba(255, 149, 0, 0); }
 }
 
-/* กล่องแสดงผล */
-#resultBox{ margin-top:20px; padding:20px; border-radius:16px; background:var(--card); border:1px solid var(--border); font-size:16px; line-height:1.6; min-height: 100px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+/* ปุ่มพิเศษสำหรับ AI Tutor (เรียบๆ) */
+button.tutor-btn {
+    background: var(--ai-bg);
+    color: var(--ai-text);
+    border: 1px solid var(--ai-text);
+    font-size: 14px;
+    padding: 10px;
+    display: none; /* ซ่อนไว้ก่อน */
+}
 
-/* Layout ตารางเรียน */
+/* ===== RESULT BOX ===== */
+#resultBox{
+    margin-top:20px;
+    padding:20px;
+    border-radius:16px;
+    background:var(--card);
+    border:1px solid var(--border);
+    font-size:16px;
+    line-height:1.6;
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+/* ===== TABLE LAYOUT ===== */
 .schedule-container { width: 100%; text-align: left; }
 .schedule-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding: 12px 0; }
 .schedule-row:last-child { border-bottom: none; }
@@ -42,6 +145,40 @@ button.reduce-btn.active{ background: var(--warn-active); color: #000; border-co
 .info-col { width: 65%; padding-left: 10px; }
 .subject-name { font-weight: 600; display: block; line-height: 1.3; }
 .room-name { font-size: 13px; color: var(--sub); margin-top: 4px; display: inline-block; background: var(--bg); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border); }
+
+/* ===== AI SECTION (Clean Note Style) ===== */
+.ai-section { 
+    border-top: 1px solid var(--border); 
+    padding-top: 20px; 
+    margin-top: 30px; 
+}
+.ai-title { font-size: 1.1em; font-weight: bold; margin-bottom: 10px; color: var(--sub); display: flex; align-items: center; gap: 8px;}
+
+textarea { 
+    width: 100%; height: 80px; padding: 12px; 
+    border-radius: 12px; border: 1px solid var(--border); 
+    background: var(--card); color: var(--text); 
+    font-family: inherit; resize: none; box-sizing: border-box; font-size: 14px; 
+}
+textarea:focus { outline: 2px solid var(--btn); border-color: transparent; }
+
+.ai-controls { display: flex; gap: 10px; margin-top: 10px; }
+.btn-ai { background: var(--sub); color: #fff; flex: 3; }
+.btn-clear { background: var(--card); color: var(--sub); border: 1px solid var(--border); flex: 1; box-shadow: none; }
+
+.ai-output { 
+    margin-top: 15px; 
+    background: var(--card); 
+    padding: 15px; 
+    border-radius: 12px; 
+    border-left: 4px solid var(--btn); 
+    font-size: 14px; 
+    line-height: 1.6; 
+    white-space: pre-wrap; 
+    text-align: left;
+    display: none;
+}
+.ai-output strong { color: var(--btn); }
 </style>
 </head>
 
@@ -61,15 +198,39 @@ button.reduce-btn.active{ background: var(--warn-active); color: #000; border-co
 
 <div id="resultBox">กดปุ่มเพื่อดูข้อมูล</div>
 
+<div class="ai-section">
+    <div class="ai-title">📝 Hunter Note & Helper</div>
+    <button id="btnTutor" class="main-btn tutor-btn" onclick="tutorCurrentClass()" style="margin-bottom:10px;">🎓 สรุปเนื้อหาวิชานี้ให้หน่อย</button>
+    
+    <textarea id="taskInput" placeholder="พิมพ์โน้ต หรือสั่งงาน... (เช่น 'การบ้านวิชานี้ส่งวันไหน', 'วางแผนงานกลุ่ม')"></textarea>
+    
+    <div class="ai-controls">
+        <button class="main-btn btn-ai" onclick="askAI()">✨ ให้ AI ช่วยคิด</button>
+        <button class="main-btn btn-clear" onclick="clearNote()">ลบ</button>
+    </div>
+    <div id="aiOutput" class="ai-output"></div>
+</div>
+
 <script>
-/* ===== โหมดสว่าง/มืด ===== */
+/* ===== 1. SYSTEM & MEMORY ===== */
 function toggleMode(){
     document.body.classList.toggle("dark");
     localStorage.setItem("theme",document.body.classList.contains("dark")?"dark":"light");
 }
-if(localStorage.getItem("theme")==="dark"){ document.body.classList.add("dark"); }
+window.onload = () => {
+    if(localStorage.getItem("theme")==="dark") document.body.classList.add("dark");
+    if(localStorage.getItem("isReducedMode") === "true") {
+        isReducedMode = true;
+        updateReduceBtn();
+    }
+    // โหลดความจำล่าสุด
+    const mem = localStorage.getItem("hunterMem");
+    if(mem){ 
+        document.getElementById("aiOutput").style.display="block";
+        document.getElementById("aiOutput").innerHTML = mem;
+    }
+}
 
-/* ===== เวลาไทย ===== */
 function thaiTime(){
     const d=new Date();
     const days=["อาทิตย์","จันทร์","อังคาร","พุธ","พฤหัส","ศุกร์","เสาร์"];
@@ -77,64 +238,49 @@ function thaiTime(){
 }
 setInterval(()=>document.getElementById("time").innerText = thaiTime(),1000);
 
-/* ===== ข้อมูลตารางเรียน (อัปเดตรายละเอียดห้องเรียนตามภาพจริง) ===== */
+/* ===== 2. DATA (CORRECTED FROM IMAGE) ===== */
 const scheduleData={
-    // วันอังคาร
     2: [
-        {start:"08:40", end:"10:20", name:"ภาษาอังกฤษเพื่องานช่างอุตสาหกรรม (EDL)", room:"1051 (EDL) - อ.REYNALYN"},
-        {start:"12:50", end:"13:40", name:"ภาษาอังกฤษเพื่องานช่างอุตสาหกรรม (EDL)", room:"1053 (EDL) - อ.SOPHIE"},
-        {start:"14:30", end:"15:20", name:"สุขภาพ ความปลอดภัยและสิ่งแวดล้อม", room:"1221 - อ.นพรัตน์"}
+        {start:"08:40", end:"10:20", name:"ภาษาอังกฤษเพื่องานช่างฯ (EDL)", room:"1051 (อ.REYNALYN)"},
+        {start:"12:50", end:"14:30", name:"ภาษาอังกฤษเพื่องานช่างฯ (EDL)", room:"1053 (อ.SOPHIE)"}, /* แก้จาก 13.40 เป็น 14.30 */
+        {start:"14:30", end:"15:20", name:"สุขภาพ ความปลอดภัยฯ", room:"1221 (อ.นพรัตน์)"}
     ],
-    // วันพุธ
     3: [
-        {start:"08:40", end:"12:00", name:"การติดตั้งและควบคุมมอเตอร์ไฟฟ้า", room:"642 - อ.สุรเดช/อ.ปิยะ"},
-        {start:"12:50", end:"13:40", name:"กิจกรรมองค์การวิชาชีพ 1", room:"432 - อ.ภาณุวัฒน์"},
-        {start:"14:30", end:"15:20", name:"ภาษาอังกฤษเพื่องานช่างอุตสาหกรรม (EDL)", room:"1051 (EDL) - อ.REYNALYN"}
+        {start:"08:40", end:"12:00", name:"ติดตั้ง/ควบคุมมอเตอร์", room:"642 (TA.Suradet/O.Piya)"},
+        {start:"12:50", end:"13:40", name:"กิจกรรมองค์การฯ", room:"432 (อ.ภาณุวัฒน์)"},
+        {start:"14:30", end:"16:10", name:"ภาษาอังกฤษเพื่องานช่างฯ (EDL)", room:"1051 (อ.REYNALYN)"} /* แก้จาก 15.20 เป็น 16.10 */
     ],
-    // วันพฤหัสบดี
     4: [
-        {start:"08:40", end:"09:30", name:"ประวัติศาสตร์ชาติไทย", room:"1221 - อ.ปณณรักษ์"},
-        {start:"12:50", end:"16:10", name:"การควบคุมหุ่นยนต์อุตสาหกรรมเบื้องต้น", room:"424 - TA.อัมรินทร์/อ.ประกิต"}
+        {start:"08:40", end:"10:20", name:"ประวัติศาสตร์ไทย", room:"1221 (อ.ปณณรักษ์)"}, /* แก้จาก 09.30 เป็น 10.20 */
+        {start:"12:50", end:"16:10", name:"หุ่นยนต์อุตสาหกรรมฯ", room:"424 (TA.Amarin/O.Prakit)"}
     ],
-    // วันศุกร์
     5: [
-        {start:"08:40", end:"12:00", name:"ชิ้นส่วนเครื่องกลในงานเมคคาทรอนิกส์", room:"544 - TA.จิรนันท์/อ.รัตนศิริ"},
-        {start:"13:40", end:"16:10", name:"ภาษาอังกฤษเพื่องานช่างอุตสาหกรรม (EDL)", room:"1051 (EDL) - อ.SOPHIE"}
+        {start:"08:40", end:"12:00", name:"ชิ้นส่วนเครื่องกลฯ", room:"544 (TA.Jiranan/O.Rattanasiri)"},
+        {start:"14:30", end:"16:10", name:"ภาษาอังกฤษเพื่องานช่างฯ (EDL)", room:"1051 (อ.SOPHIE)"} /* แก้เริ่ม 14.30 */
     ],
-    // วันเสาร์
     6: [
-        {start:"08:40", end:"09:30", name:"การพัฒนาอย่างยั่งยืน", room:"223 - อ.ศิริวรรณ"},
-        {start:"12:50", end:"16:10", name:"ระบบเครื่องจักรกลอัตโนมัติเบื้องต้น", room:"1323 (ปฏิบัติ IOT) - TA.ศุภสิน"}
+        {start:"08:40", end:"10:20", name:"การพัฒนาอย่างยั่งยืน", room:"223 (อ.ศิริวรรณ)"}, /* แก้จาก 09.30 เป็น 10.20 */
+        {start:"12:50", end:"16:10", name:"ระบบเครื่องจักรกลอัตโนมัติ", room:"1323 (IOT)"}
     ]
 };
 
-/* ===== ตารางเทียบเวลา (Mapper: อ้างอิงภาพ Reduced Table เป๊ะๆ) ===== */
-const timeMap = {
-    // ช่วงเช้า
-    "08:40": "08:40", 
-    "09:30": "09:20",
-    "10:20": "10:00",
-    "11:10": "10:40",
-    "12:00": "11:20", // จบคาบเช้า (ลดเวลา)
-    
-    // ช่วงบ่าย (ในภาพลดเวลา คาบ 6 เริ่ม 12:00)
-    "12:50": "12:00", // เริ่มคาบบ่าย (ปกติ 12:50 -> ลด 12:00)
-    "13:40": "12:40",
-    "14:30": "13:20",
-    "15:20": "14:00",
-    "16:10": "14:40"  // เลิกเรียน (ลดเวลา)
-};
+const timeMap = { "08:40":"08:40", "09:30":"09:20", "10:20":"10:00", "11:10":"10:40", "12:00":"11:20", "12:50":"12:00", "13:40":"12:40", "14:30":"13:20", "15:20":"14:00", "16:10":"14:40" };
 
-/* ===== ตัวแปรควบคุมโหมดลดเวลา ===== */
 let isReducedMode = false;
+let currentSubjectName = "";
 
 function toggleReduce() {
     isReducedMode = !isReducedMode;
+    localStorage.setItem("isReducedMode", isReducedMode);
+    updateReduceBtn();
+}
+
+function updateReduceBtn() {
     const btn = document.getElementById("btnReduce");
     if(isReducedMode) {
         btn.innerHTML = "⚡ ลดเวลาเรียน (ทำงานอยู่)";
         btn.classList.add("active");
-        show("เปิดโหมดลดเวลา 40 นาที/คาบ \nเวลาเรียนทั้งหมดถูกปรับอัตโนมัติ!");
+        show("เปิดโหมดลดเวลา 40 นาทีแล้ว! \nเวลาเรียนทั้งหมดจะถูกปรับลดลง");
     } else {
         btn.innerHTML = "⚠️ ลดเวลาเรียน (ปิด)";
         btn.classList.remove("active");
@@ -142,26 +288,17 @@ function toggleReduce() {
     }
 }
 
-/* ===== ฟังก์ชันดึงตาราง (Mapping Logic) ===== */
-function getSchedule(dayIdx) {
-    if (!scheduleData[dayIdx]) return null;
-    if (!isReducedMode) return scheduleData[dayIdx]; // ถ้าปิดโหมด ให้คืนค่าปกติ
-
-    // ถ้าเปิดโหมด ให้แปลงเวลา start/end ผ่าน timeMap
-    return scheduleData[dayIdx].map(item => {
-        return {
-            ...item,
-            start: timeMap[item.start] || item.start,
-            end: timeMap[item.end] || item.end
-        };
-    });
+function getSchedule(d) { 
+    if(!scheduleData[d]) return null;
+    if(!isReducedMode) return scheduleData[d];
+    return scheduleData[d].map(i => ({...i, start:timeMap[i.start]||i.start, end:timeMap[i.end]||i.end}));
 }
 
-/* ===== Utilities ===== */
+/* ===== 3. LOGIC ===== */
 function toMin(t){let[h,m]=t.split(":");return +h*60+ +m;}
 function nowMin(){let d=new Date();return d.getHours()*60+d.getMinutes();}
-
 let timer=null;
+
 function countdown(targetMin,text){
     clearInterval(timer);
     const update = () => {
@@ -180,23 +317,18 @@ function countdown(targetMin,text){
     timer=setInterval(update,1000);
 }
 
-function findNextDay(d){
-    for(let i=1;i<=7;i++){
-        let nd=(d+i)%7;
-        if(scheduleData[nd]) return nd;
-    }
-}
-
-/* ===== ปุ่มฟังก์ชันหลัก ===== */
 function currentClass(){
     const d=new Date().getDay(), n=nowMin();
     const sch = getSchedule(d);
-    if(!sch) return nextAvailableDay("วันนี้ไม่มีเรียน");
+    document.getElementById("btnTutor").style.display = "none";
+    
+    if(!sch) return show("วันนี้ไม่มีเรียน");
 
     for(const c of sch){
         if(n>=toMin(c.start) && n<toMin(c.end)){
-            countdown(toMin(c.end),
-            `📌 กำลังเรียน (${isReducedMode?'ลดเวลา':'ปกติ'}):<br>${c.name}<br>${c.room}`);
+            currentSubjectName = c.name; 
+            document.getElementById("btnTutor").style.display = "block";
+            countdown(toMin(c.end), `📌 กำลังเรียน (${isReducedMode?'ลดเวลา':'ปกติ'}):<br>${c.name}<br>ห้อง ${c.room}`);
             return;
         }
     }
@@ -206,23 +338,20 @@ function currentClass(){
 function nextClass(){
     const d=new Date().getDay(), n=nowMin();
     const sch = getSchedule(d);
-    if(!sch) return nextAvailableDay("วันนี้ไม่มีเรียน");
-
+    if(!sch) return show("วันนี้ไม่มีเรียน");
     for(const c of sch){
         if(toMin(c.start)>n){
-            countdown(toMin(c.start),
-            `➡️ คาบต่อไป (${isReducedMode?'ลดเวลา':'ปกติ'}):<br>${c.name}<br>${c.room}`);
+            countdown(toMin(c.start), `➡️ คาบต่อไป (${isReducedMode?'ลดเวลา':'ปกติ'}):<br>${c.name}<br>ห้อง ${c.room}`);
             return;
         }
     }
-    nextAvailableDay("วันนี้เรียนครบทุกวิชาแล้ว");
+    show("วันนี้เรียนครบทุกวิชาแล้ว");
 }
 
 function breakTime(){
     const d=new Date().getDay(), n=nowMin();
     const sch = getSchedule(d);
-    if(!sch) return nextAvailableDay("วันนี้ไม่มีเรียน");
-    
+    if(!sch) return show("วันนี้ไม่มีเรียน");
     for(const c of sch){
         if(n>=toMin(c.start) && n<toMin(c.end)){
             countdown(toMin(c.end), `📚 เลิกคาบนี้ (${c.name})`);
@@ -240,47 +369,134 @@ function breakTime(){
 
 function showSchedule(){
     clearInterval(timer);
-    const d=new Date().getDay();
-    const sch = getSchedule(d);
-    if(!sch) return nextAvailableDay("วันนี้ไม่มีเรียน");
+    let d = new Date().getDay();
+    let n = nowMin();
+    let title = "ตารางเรียนวันนี้";
     
-    let html = `<div style="width:100%;">`;
-    html += `<h3 style="margin:0 0 15px; color:var(--text);">📅 ตารางเรียนวันนี้ ${isReducedMode?'(ลดเวลา) ⚡':''}</h3>`;
-    html += `<div class="schedule-container">`;
-
+    // Logic: ดูวันพรุ่งนี้ถ้าเย็นแล้ว
+    if(n > 990 || !scheduleData[d]) {
+         for(let i=1; i<=7; i++) {
+             let nd = (d+i)%7;
+             if(scheduleData[nd]) { d = nd; title = "ตารางเรียนวันถัดไป"; break; }
+         }
+    }
+    const sch = getSchedule(d);
+    if(!sch) return show("ไม่มีตารางเรียนเร็วๆ นี้");
+    
+    let html = `<div style="width:100%;"><h3 style="margin:0 0 15px; color:var(--text);">${title} ${isReducedMode?'(ลดเวลา) ⚡':''}</h3><div class="schedule-container">`;
     sch.forEach(c=>{
-        html += `
-        <div class="schedule-row">
-            <div class="time-col">
-                ${c.start}
-                <span>ถึง ${c.end}</span>
-            </div>
-            <div class="info-col">
-                <span class="subject-name">${c.name}</span>
-                <span class="room-name">${c.room}</span>
-            </div>
-        </div>`;
+        html += `<div class="schedule-row"><div class="time-col">${c.start}<span>ถึง ${c.end}</span></div><div class="info-col"><span class="subject-name">${c.name}</span><span class="room-name">ห้อง ${c.room}</span></div></div>`;
     });
-
     html += `</div></div>`;
     document.getElementById("resultBox").innerHTML = html;
-}
-
-function nextAvailableDay(msg){
-    let d=new Date().getDay();
-    let next=findNextDay(d);
-    let schNext = getSchedule(next); 
-    if (!schNext) { show(msg); return; } // ป้องกัน error ถ้าวันถัดไปไม่มีตาราง
-
-    let first=schNext[0];
-    const daysTh = ["อาทิตย์","จันทร์","อังคาร","พุธ","พฤหัส","ศุกร์","เสาร์"];
-    
-    show(`${msg}\n\n➡️ เจออีกทีวัน${daysTh[next]}\nวิชา ${first.name}\nเริ่ม ${first.start}`);
 }
 
 function show(t){
     clearInterval(timer);
     document.getElementById("resultBox").innerText = t;
+}
+
+/* ===== 4. AI LOGIC (SUPER PLANNER UPGRADE) ===== */
+const API_KEY = "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"; 
+const MODEL = "llama-3.3-70b-versatile";
+
+function clearNote(){
+    localStorage.removeItem("hunterMem");
+    document.getElementById("aiOutput").style.display="none";
+    document.getElementById("aiOutput").innerHTML="";
+    document.getElementById("taskInput").value="";
+}
+
+function tutorCurrentClass() {
+    if(!currentSubjectName) return;
+    document.getElementById("taskInput").value = `สรุปเนื้อหาวิชา "${currentSubjectName}" ให้หน่อยครับ เน้นหัวข้อสำคัญ`;
+    askAI();
+}
+
+async function askAI() {
+    const input = document.getElementById("taskInput").value.trim();
+    if (!input) return;
+
+    const out = document.getElementById("aiOutput");
+    const btn = document.querySelector(".btn-ai");
+    
+    // 1. Loading State
+    out.style.display = "block";
+    out.innerHTML = "🧠 Hunter กำลังวางแผนและประมวลผล...";
+    const oldBtnText = btn.innerText;
+    btn.innerText = "⏳ กำลังคิด...";
+    btn.disabled = true;
+
+    // 2. Build Context (รู้เขารู้เรา)
+    const d = new Date().getDay();
+    const sch = getSchedule(d);
+    const n = nowMin();
+    
+    // หาบริบทเวลา: เรียนอยู่? ว่าง? หรือเลิกเรียน?
+    let statusContext = "Free Time / After School";
+    if(sch) {
+        for(let c of sch) {
+            if(n >= toMin(c.start) && n < toMin(c.end)) {
+                statusContext = `Currently studying: ${c.name} in room ${c.room}`;
+                break;
+            }
+        }
+    }
+    
+    const dayNames = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+    const nowStr = new Date().toLocaleTimeString("th-TH");
+    
+    // 3. Super Planner Prompt
+    const prompt = `
+    Role: You are "Hunter", an elite academic assistant for a Thai vocational student.
+    User Input: "${input}"
+    
+    Current Situations:
+    - Time: ${nowStr} (${dayNames[d]})
+    - Status: ${statusContext}
+    - Schedule Data: ${JSON.stringify(sch || "No Class")}
+    
+    Instructions:
+    1. **Systematic Thinking:** Do not just answer. Break it down into steps, bullet points, or a checklist.
+    2. **Planning Mode:** If asked to plan, look at the current time. 
+       - If morning -> Plan the study day.
+       - If evening -> Plan homework/rest.
+    3. **Tone:** Concise, Professional, Smart, Encouraging (Thai Language).
+    4. **Format:** Use HTML tags strictly for the output:
+       - <b>Bold</b> for topics.
+       - <ul><li>...</li></ul> for lists.
+       - <br> for line breaks.
+       - Do NOT use markdown (like ** or -).
+    `;
+
+    try {
+        const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${API_KEY}`
+            },
+            body: JSON.stringify({
+                messages: [{ role: "user", content: prompt }],
+                model: MODEL,
+                temperature: 0.5, // 0.5 = Balanced for planning (not too random)
+                max_tokens: 1000
+            })
+        });
+
+        const data = await response.json();
+        const aiText = data.choices[0].message.content;
+        
+        // 4. Update UI & Memory
+        out.innerHTML = aiText;
+        localStorage.setItem("hunterMem", aiText); // จำไว้
+
+    } catch (error) {
+        out.innerHTML = `<span style="color:red">Connection Failed: ${error.message}</span>`;
+    }
+
+    btn.innerText = oldBtnText;
+    btn.disabled = false;
 }
 </script>
 
